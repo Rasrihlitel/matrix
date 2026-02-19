@@ -58,7 +58,7 @@ void insertmatrix(int** matrix, int n) {
 	else {
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
-				matrix[i][j] = 1 + rand() % 100;
+				matrix[i][j] = 1 + rand() % 25;
 			}
 		}
 	}
@@ -91,8 +91,9 @@ void transposition(int** matrix, int n) {
 	}
 }
 
-void saddlery(int** matrix, int n) {
+int saddlery(int** matrix, int* row, int* column, int n) {
 	int f = 0;
+	int count = 0;
 	for (int i = 0; i < n; i++) {
 		int min = matrix[i][0];
 		for (int j = 1; j < n; j++) {
@@ -110,24 +111,26 @@ void saddlery(int** matrix, int n) {
 				}
 				if (max == matrix[i][j]) {
 					f = 1;
-					cout << "Седловой элемент находится в " << i + 1 << " строке и в " << j + 1 << " столбце" << endl;
+					row[count] = i + 1;
+					column[count] = j + 1;
+					count++;
 				}
 			}
 		}
 
 	}
-	if (f == 0) {
-		cout << "Седловых элементов нет" << endl;
-	}
+	return count;
 }
 
 int main(int argc, char* argv[]) {
 	setlocale(LC_ALL, "RUS");
 	srand(time(0));
+	int* column = nullptr;
+	int* row = nullptr;
 	int* vector = nullptr;
 	int* result = nullptr;
 	int** matrix = nullptr;
-	int code, n = 0, flag = 0, f = 0;
+	int code, n = 0, flag = 0, f = 0, count = 0;
 	do {
 		hello(code);
 		switch (code) {
@@ -214,7 +217,20 @@ int main(int argc, char* argv[]) {
 					cout << "Для начала надо создать матрицу" << endl;
 					break;
 				}
-				saddlery(matrix, n);
+				column = new int[n * n];
+				row = new int[n * n];
+				count = saddlery(matrix, row, column, n);
+				if (count == 0) {
+					cout << "Седловых элементов нет" << endl;
+				}
+				else {
+					for (int i = 0; i < count; i++) {
+						cout << "Седловой элемент находится в " << row[i] << " строке и " << column[i] << " столбце" << endl;
+					}
+				}
+				count = 0;
+				delete[] column;
+				delete[] row;
 				break;
 
 			default:
@@ -237,6 +253,12 @@ int main(int argc, char* argv[]) {
 			delete[] matrix[i];
 		}
 		delete[] matrix;
+	}
+	if (column != nullptr) {
+		delete[] column;
+	}
+	if (row != nullptr) {
+		delete[] row;
 	}
 	return 0;
 }
