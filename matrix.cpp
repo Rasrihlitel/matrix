@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 using namespace std;
+
 void hello(int& code) {
 	cout << "0. Выход" << endl;
 	cout << "1. Создать матрицу" << endl;
@@ -45,9 +46,20 @@ int* create_vector(int* vector, int n) {
 }
 
 void insertmatrix(int** matrix, int n) {
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			matrix[i][j] = 1 + rand() % 100;
+	if (n < 5) {
+		cout << "Ввод элементов матрицы осуществляется самостоятельно: " << endl;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				cout << "Элемент " << i + 1 << " строки " << j + 1 << " столбца: ";
+				cin >> matrix[i][j];
+			}
+		}
+	}
+	else {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				matrix[i][j] = 1 + rand() % 100;
+			}
 		}
 	}
 }
